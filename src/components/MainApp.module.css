@@ -448,6 +448,24 @@
   border-color: transparent;
 }
 
+.analyzeButton {
+  padding: 6px 16px;
+  background: rgba(99, 102, 241, 0.1);
+  color: #818cf8;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.analyzeButton:hover {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+
 .loadingState {
   display: flex;
   flex-direction: column;
@@ -466,6 +484,13 @@
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
+
+.savedLeadActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
 
 @keyframes spin {
   to { transform: rotate(360deg); }

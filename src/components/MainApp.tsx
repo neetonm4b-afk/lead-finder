@@ -2,9 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import styles from './MainApp.module.css';
+import AnalysisModal from './AnalysisModal';
+
 
 interface Lead {
   id: string;
+  placeId: string;
   name: string;
   address: string;
   phoneNumber?: string;
@@ -12,7 +15,7 @@ interface Lead {
   rating: number;
   userRatingCount: number;
   leadScore: number;
-  types: string;
+  types: string[];
   filterPass: boolean;
   failReasons: string[];
   createdAt?: string;
@@ -35,6 +38,8 @@ export default function MainApp() {
   const [savedLeads, setSavedLeads] = useState<Lead[]>([]);
   const [savedLoading, setSavedLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [isAnalysisModalOpen, setIsAnalysisModalOpen] = useState(false);
+
 
   useEffect(() => {
     if (activeTab === 'saved') {
@@ -74,6 +79,8 @@ export default function MainApp() {
       setDeletingId(null);
     }
   };
+
+
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -254,7 +261,7 @@ export default function MainApp() {
                 <p className={styles.address}>{lead.address}</p>
                 <div className={styles.leadMeta}>
                   <span>⭐ {lead.rating} ({lead.userRatingCount})</span>
-                  <span>{lead.types}</span>
+                  <span>{lead.types.slice(0, 3).join(', ')}</span>
                 </div>
               </div>
             ))}
@@ -323,6 +330,13 @@ export default function MainApp() {
                   </button>
                   <button 
                     className={styles.button} 
+                    style={{ background: 'linear-gradient(135deg, #6366f1 0%, #a855f7 100%)' }}
+                    onClick={() => setIsAnalysisModalOpen(true)}
+                  >
+                    ✨ ポジショニング分析
+                  </button>
+                  <button 
+                    className={styles.button} 
                     style={{ background: '#444' }}
                     onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(selectedLead.name + ' ' + selectedLead.address)}`, '_blank')}
                   >
@@ -385,13 +399,25 @@ export default function MainApp() {
                       <div className={styles.leadMeta}>
                         <span>⭐ {lead.rating || 'N/A'}</span>
                       </div>
-                      <button 
-                        className={styles.deleteButton}
-                        onClick={() => handleDeleteLead(lead.id)}
-                        disabled={deletingId === lead.id}
-                      >
-                        {deletingId === lead.id ? 'Deleting...' : '削除'}
-                      </button>
+                      <div className={styles.savedLeadActions}>
+                        <button 
+                          className={styles.analyzeButton}
+                          onClick={() => {
+                            setSelectedLead(lead);
+                            setIsAnalysisModalOpen(true);
+                          }}
+                        >
+                          ✨ 分析
+                        </button>
+
+                        <button 
+                          className={styles.deleteButton}
+                          onClick={() => handleDeleteLead(lead.id)}
+                          disabled={deletingId === lead.id}
+                        >
+                          {deletingId === lead.id ? 'Deleting...' : '削除'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -418,6 +444,14 @@ export default function MainApp() {
           <span>{notification.type === 'success' ? '✅' : '⚠️'}</span>
           {notification.message}
         </div>
+      )}
+
+      {selectedLead && (
+        <AnalysisModal 
+          isOpen={isAnalysisModalOpen} 
+          onClose={() => setIsAnalysisModalOpen(false)} 
+          lead={selectedLead} 
+        />
       )}
     </div>
   );

@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
         rating: leadData.rating,
         userRatingsTotal: leadData.userRatingCount,
         leadScore: leadData.leadScore,
-        types: leadData.types,
+        types: leadData.types || [],
         status: "SAVED"
       }
     });

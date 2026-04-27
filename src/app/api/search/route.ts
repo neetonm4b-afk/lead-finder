@@ -115,7 +115,7 @@ export async function POST(req: NextRequest) {
           rating: rating,
           userRatingCount: reviewCount,
           leadScore: Math.max(0, score),
-          types: place.types?.join(", "),
+          types: place.types || [],
           filterPass,
           failReasons
         };
