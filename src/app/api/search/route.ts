@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
       // 非同期で履歴保存
       prisma.searchHistory.create({
         data: { query: query || "", location: location || "" },
-      }).catch(err => console.error("History save failed", err));
+      }).catch((err: unknown) => console.error("History save failed", err));
 
       return NextResponse.json({ leads });
     } catch (fetchError) {
